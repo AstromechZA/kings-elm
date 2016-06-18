@@ -36,10 +36,11 @@ shuffle cards =
 
 swapSpadeKingToEndish : List Cards.Card -> Int -> List Cards.Card
 swapSpadeKingToEndish cards endpad =
-    let
-        (a, b) = List.partition (\c -> c.face == Cards.King && c.suite == Cards.Spades) cards
-    in
-        List.append b a
+    swapSpadeKingToEndish2 (List.partition (\c -> c.face == Cards.King && c.suite == Cards.Spades) cards) endpad
+
+swapSpadeKingToEndish2 : (List Cards.Card, List Cards.Card) -> Int -> List Cards.Card
+swapSpadeKingToEndish2 (kscards, nonkscards) endpad =
+    (List.drop endpad nonkscards) ++ kscards ++ (List.take endpad nonkscards)
 
 viewCardListItem : Cards.Card -> Html.Html Msg
 viewCardListItem card =
