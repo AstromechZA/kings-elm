@@ -34,7 +34,11 @@ update msg model =
 -- Init
 
 init : (Model, Cmd Msg)
-init = (Model Decks.newDeck, Cmd.none)
+init =
+    let
+        model = Model Decks.newDeck
+    in
+        (model, Cmd.map DeckMsg (Decks.shuffle model.deck.cards))
 
 subscriptions : Model -> Sub Msg
 subscriptions model = Sub.none

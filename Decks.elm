@@ -1,4 +1,4 @@
-module Decks exposing (Deck, newDeck, Msg, update, view)
+module Decks exposing (Deck, newDeck, Msg, update, view, shuffle)
 
 import Html
 import Html.App
@@ -24,11 +24,15 @@ update : Msg -> Deck -> (Deck, Cmd Msg)
 update msg deck =
     case msg of
         BeginShuffle ->
-            (deck, Random.generate EndShuffle (Random.Array.shuffle (Array.fromList deck.cards)))
+            (deck, shuffle deck.cards)
         EndShuffle cards ->
             ({deck | cards = (Array.toList cards)}, Cmd.none)
         CardMsg msg ->
             (deck, Cmd.none)
+
+shuffle : List Cards.Card -> Cmd Msg
+shuffle cards =
+    Random.generate EndShuffle (Random.Array.shuffle (Array.fromList cards))
 
 viewCardListItem : Cards.Card -> Html.Html Msg
 viewCardListItem card =
