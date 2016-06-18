@@ -1,4 +1,4 @@
-module Decks exposing (Deck, newDeck, Msg, update, view, shuffle)
+module Decks exposing (Deck, newDeck, Msg, update, view, shuffle, pop)
 
 import Html
 import Html.App
@@ -33,6 +33,10 @@ update msg deck =
 shuffle : List Cards.Card -> Cmd Msg
 shuffle cards =
     Random.generate EndShuffle (Random.pair (Random.Array.shuffle (Array.fromList cards)) (Random.int 0 10))
+
+pop : Deck -> (Maybe Cards.Card, Deck)
+pop deck =
+    (List.head deck.cards, Deck (Maybe.withDefault [] (List.tail deck.cards)))
 
 viewCardListItem : Cards.Card -> Html.Html Msg
 viewCardListItem card =
