@@ -30,6 +30,9 @@ view model =
             Nothing ->
                 Html.text "no card drawn"
         ,
+        Html.p [] [
+            Html.text ((toString (List.length model.deck.cards)) ++ " cards remaining")
+        ],
         Html.App.map DeckMsg (Decks.view model.deck)
     ]
 
