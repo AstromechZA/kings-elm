@@ -17,7 +17,7 @@ newDeck = { cards = Cards.allCards }
 
 type Msg
     = BeginShuffle
-    | EndShuffle (Array.Array Cards.Card)
+    | EndShuffle (Array.Array Cards.Card, Int)
     | CardMsg Cards.Msg
 
 update : Msg -> Deck -> (Deck, Cmd Msg)
@@ -25,14 +25,21 @@ update msg deck =
     case msg of
         BeginShuffle ->
             (deck, shuffle deck.cards)
-        EndShuffle cards ->
-            ({deck | cards = (Array.toList cards)}, Cmd.none)
+        EndShuffle (cards, ind) ->
+            ({deck | cards = swapSpadeKingToEndish (Array.toList cards) ind}, Cmd.none)
         CardMsg msg ->
             (deck, Cmd.none)
 
 shuffle : List Cards.Card -> Cmd Msg
 shuffle cards =
-    Random.generate EndShuffle (Random.Array.shuffle (Array.fromList cards))
+    Random.generate EndShuffle (Random.pair (Random.Array.shuffle (Array.fromList cards)) (Random.int 0 10))
+
+swapSpadeKingToEndish : List Cards.Card -> Int -> List Cards.Card
+swapSpadeKingToEndish cards endpad =
+    let
+        (a, b) = List.partition (\c -> c.face == Cards.King && c.suite == Cards.Spades) cards
+    in
+        List.append b a
 
 viewCardListItem : Cards.Card -> Html.Html Msg
 viewCardListItem card =

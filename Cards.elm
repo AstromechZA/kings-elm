@@ -1,4 +1,4 @@
-module Cards exposing (Suite, Face, Card, allCards, toCardString, view, Msg)
+module Cards exposing (Suite(..), Face(..), Card, allCards, toCardString, view, Msg, kingOfSpades)
 
 import Html
 
@@ -23,6 +23,10 @@ type Msg = NoOp
 toCardString : Card -> String
 toCardString card =
     (toString card.face) ++ " of " ++ (toString card.suite)
+
+kingOfSpades : Card
+kingOfSpades =
+    Card Spades King
 
 -- VIEW
 
