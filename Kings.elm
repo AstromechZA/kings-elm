@@ -20,10 +20,12 @@ type Msg
     | DeckMsg Decks.Msg
     | CardMsg Cards.Msg
     | DrawACard
+    | ResetAll
 
 view : Model -> Html.Html Msg
 view model =
     Html.div [ Html.Attributes.attribute "class" "playingCards" ] [
+        Html.button [ Html.Events.onClick ResetAll ] [ Html.text "Reset" ],
         Html.button [ Html.Events.onClick DrawACard ] [ Html.text "Draw A Card" ],
         case model.selectedCard of
             Just card ->
@@ -68,6 +70,11 @@ update msg model =
                     Nothing ->
                         -- TODO if cards is empty
                         (model, Cmd.none)
+        ResetAll ->
+            let
+                (emptymodel, deck) = (Model (Decks.Deck []) Nothing 0, Decks.newDeck)
+            in
+                (emptymodel, Cmd.map DeckMsg (Decks.shuffle deck.cards))
         _ ->
             (model, Cmd.none)
 
