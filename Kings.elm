@@ -44,14 +44,14 @@ update msg model =
                 -- apply the update to the model, and fire any upstream Cmd
                 ({model | deck = newdeck}, Cmd.map DeckMsg newmsg)
         DrawACard ->
-            if List.length model.deck.cards > 0 then
-                let
-                    (c, newdeck) = Decks.pop model.deck
-                in
+            let
+                (c, newdeck) = Decks.pop model.deck
+            in
+                if c == Nothing then
+                    -- TODO if cards is empty
+                    (model, Cmd.none)
+                else
                     ({model | deck = newdeck, selectedCard = c}, Cmd.none)
-            else
-                -- TODO if cards is empty
-                (model, Cmd.none)
 
 -- Init
 
