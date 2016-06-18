@@ -1,6 +1,7 @@
 import Html
 import Html.Events
 import Html.App
+import Html.Attributes
 import Cards
 import Decks
 
@@ -16,13 +17,19 @@ type alias Model = {
 type Msg
     = NoOp
     | DeckMsg Decks.Msg
+    | CardMsg Cards.Msg
     | DrawACard
 
 view : Model -> Html.Html Msg
 view model =
-    Html.div [] [
+    Html.div [ Html.Attributes.attribute "class" "playingCards" ] [
         Html.button [ Html.Events.onClick DrawACard ] [ Html.text "Draw A Card" ],
-        Html.text (toString model.selectedCard),
+        case model.selectedCard of
+            Just card ->
+                Html.App.map CardMsg (Cards.view card)
+            Nothing ->
+                Html.text "no card drawn"
+        ,
         Html.App.map DeckMsg (Decks.view model.deck)
     ]
 
@@ -52,6 +59,8 @@ update msg model =
                     (model, Cmd.none)
                 else
                     ({model | deck = newdeck, selectedCard = c}, Cmd.none)
+        CardMsg msg ->
+            (model, Cmd.none)
 
 -- Init
 
@@ -75,3 +84,4 @@ main = Html.App.program {
     view = view,
     update = update,
     subscriptions = subscriptions}
+

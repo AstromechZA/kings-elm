@@ -59,10 +59,7 @@ isKingOfSpades card =
 
 view : Card -> Html.Html Msg
 view card =
-    Html.p [ Html.Attributes.attribute "class" "playingCards " ] [
-        Html.text (toCardString card),
-        Html.div [ Html.Attributes.attribute "class" (String.join " " ["card", card.suit.cssname, card.face.cssname]) ] [
-            Html.span [ Html.Attributes.attribute "class" "rank" ] [ Html.text card.face.symbol ],
-            Html.span [ Html.Attributes.attribute "class" "suit" ] [ Html.text card.suit.symbol ]
-        ]
+    Html.div [ Html.Attributes.attribute "class" (String.join " " ["card", card.suit.cssname, card.face.cssname]) ] [
+        Html.span [ Html.Attributes.attribute "class" "rank" ] [ Html.text card.face.symbol ],
+        Html.span [ Html.Attributes.attribute "class" "suit" ] [ Html.text card.suit.symbol ]
     ]
