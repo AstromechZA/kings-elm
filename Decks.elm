@@ -34,14 +34,6 @@ shuffle : List Cards.Card -> Cmd Msg
 shuffle cards =
     Random.generate EndShuffle (Random.pair (Random.Array.shuffle (Array.fromList cards)) (Random.int 0 10))
 
-swapSpadeKingToEndish : List Cards.Card -> Int -> List Cards.Card
-swapSpadeKingToEndish cards endpad =
-    swapSpadeKingToEndish2 (List.partition (\c -> c.face == Cards.King && c.suite == Cards.Spades) cards) endpad
-
-swapSpadeKingToEndish2 : (List Cards.Card, List Cards.Card) -> Int -> List Cards.Card
-swapSpadeKingToEndish2 (kscards, nonkscards) endpad =
-    (List.drop endpad nonkscards) ++ kscards ++ (List.take endpad nonkscards)
-
 viewCardListItem : Cards.Card -> Html.Html Msg
 viewCardListItem card =
     Html.li [] [Html.App.map CardMsg (Cards.view card)]
@@ -53,4 +45,12 @@ view deck =
         Html.ol [] (List.map viewCardListItem deck.cards)
     ]
 
+-- To build a good kings deck we need the last king to be somewhere near the end
+-- of the deck. These functions shift the king of spades into the last cards.
+swapSpadeKingToEndish : List Cards.Card -> Int -> List Cards.Card
+swapSpadeKingToEndish cards endpad =
+    swapSpadeKingToEndishInner (List.partition Cards.isKingOfSpades cards) endpad
+
+swapSpadeKingToEndishInner (kscards, nonkscards) endpad =
+    (List.drop endpad nonkscards) ++ kscards ++ (List.take endpad nonkscards)
 
