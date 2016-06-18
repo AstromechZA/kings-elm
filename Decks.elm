@@ -32,7 +32,7 @@ update msg deck =
 
 viewCardListItem : Cards.Card -> Html.Html Msg
 viewCardListItem card =
-    Html.li [] [(Html.App.map CardMsg (Cards.view card))]
+    Html.li [] [Html.App.map CardMsg (Cards.view card)]
 
 view : Deck -> Html.Html Msg
 view deck =
