@@ -9,7 +9,8 @@ import Decks
 
 type alias Model = {
     deck : Decks.Deck,
-    selectedCard : Maybe Cards.Card
+    selectedCard : Maybe Cards.Card,
+    kingsSeen : Int
 }
 
 -- View
@@ -33,6 +34,9 @@ view model =
         Html.p [] [
             Html.text ((toString (List.length model.deck.cards)) ++ " cards remaining")
         ],
+        Html.p [] [
+            Html.text ((toString model.kingsSeen) ++ " kings seen")
+        ],
         Html.App.map DeckMsg (Decks.view model.deck)
     ]
 
@@ -41,8 +45,6 @@ view model =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        NoOp ->
-            (model, Cmd.none)
         -- We need a way to trigger updates of nested objects, so we make sure
         -- we wrap the Msg type of the nested object and allow it to be passed
         -- through while also handling any resulting Cmds
@@ -57,12 +59,16 @@ update msg model =
             let
                 (c, newdeck) = Decks.pop model.deck
             in
-                if c == Nothing then
-                    -- TODO if cards is empty
-                    (model, Cmd.none)
-                else
-                    ({model | deck = newdeck, selectedCard = c}, Cmd.none)
-        CardMsg msg ->
+                case c of
+                    Just card ->
+                        if card.face.symbol == "k" then
+                            ({model | deck = newdeck, selectedCard = c, kingsSeen = model.kingsSeen + 1}, Cmd.none)
+                        else
+                            ({model | deck = newdeck, selectedCard = c}, Cmd.none)
+                    Nothing ->
+                        -- TODO if cards is empty
+                        (model, Cmd.none)
+        _ ->
             (model, Cmd.none)
 
 -- Init
@@ -73,7 +79,7 @@ init =
     -- in this case we want to start with an empty deck and shuffle a new deck
     -- into it.
     let
-        (emptymodel, deck) = (Model (Decks.Deck []) Nothing, Decks.newDeck)
+        (emptymodel, deck) = (Model (Decks.Deck []) Nothing 0, Decks.newDeck)
     in
         (emptymodel, Cmd.map DeckMsg (Decks.shuffle deck.cards))
 
