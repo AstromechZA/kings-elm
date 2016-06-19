@@ -1,4 +1,12 @@
-module Cards exposing (Card, allCards, toCardString, view, Msg, isKingOfSpades)
+module Cards exposing (
+    Card,
+    allCards,
+    toCardString,
+    view,
+    Msg,
+    isKingOfSpades,
+    ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king,
+    spades, hearts, diamonds, clubs)
 
 import Html
 import Html.Attributes
@@ -45,8 +53,6 @@ allCards : List Card
 allCards =
     List.concat (List.map (\s -> List.map (\f -> (Card s f)) allFaces) allSuites)
 
-type Msg = NoOp
-
 toCardString : Card -> String
 toCardString card =
     card.face.symbol ++ " of " ++ card.suit.cssname
@@ -56,6 +62,8 @@ isKingOfSpades card =
     card.suit == spades && card.face == king
 
 -- VIEW
+
+type Msg = NoOp
 
 view : Card -> Html.Html Msg
 view card =

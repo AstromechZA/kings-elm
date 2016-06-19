@@ -4,14 +4,20 @@ import Html.App
 import Html.Attributes
 import Cards
 import Decks
+import Rules
 
 -- Types
 
 type alias Model = {
     deck : Decks.Deck,
     selectedCard : Maybe Cards.Card,
-    kingsSeen : Int
+    kingsSeen : Int,
+    rules : Rules.RuleSet
 }
+
+emptyModel : Model
+emptyModel =
+    Model (Decks.Deck []) Nothing 0 (Rules.RuleSet Rules.buildBasic)
 
 -- View
 
@@ -19,6 +25,7 @@ type Msg
     = NoOp
     | DeckMsg Decks.Msg
     | CardMsg Cards.Msg
+    | RuleMsg Rules.Msg
     | DrawACard
     | ResetAll
 
@@ -39,7 +46,8 @@ view model =
         Html.p [] [
             Html.text ((toString model.kingsSeen) ++ " kings seen")
         ],
-        Html.App.map DeckMsg (Decks.view model.deck)
+        Html.App.map DeckMsg (Decks.view model.deck),
+        Html.App.map RuleMsg (Rules.view model.rules)
     ]
 
 -- Update
@@ -72,7 +80,7 @@ update msg model =
                         (model, Cmd.none)
         ResetAll ->
             let
-                (emptymodel, deck) = (Model (Decks.Deck []) Nothing 0, Decks.newDeck)
+                (emptymodel, deck) = (emptyModel, Decks.newDeck)
             in
                 (emptymodel, Cmd.map DeckMsg (Decks.shuffle deck.cards))
         _ ->
@@ -86,7 +94,7 @@ init =
     -- in this case we want to start with an empty deck and shuffle a new deck
     -- into it.
     let
-        (emptymodel, deck) = (Model (Decks.Deck []) Nothing 0, Decks.newDeck)
+        (emptymodel, deck) = (emptyModel, Decks.newDeck)
     in
         (emptymodel, Cmd.map DeckMsg (Decks.shuffle deck.cards))
 
@@ -100,4 +108,3 @@ main = Html.App.program {
     view = view,
     update = update,
     subscriptions = subscriptions}
-
