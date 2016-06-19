@@ -1,4 +1,4 @@
-module Decks exposing (Deck, newDeck, Msg, update, view, shuffle, pop)
+module Decks exposing (Deck, newDeck, Msg, update, shuffle, pop)
 
 import Html
 import Html.App
@@ -37,17 +37,6 @@ shuffle cards =
 pop : Deck -> (Maybe Cards.Card, Deck)
 pop deck =
     (List.head deck.cards, Deck (Maybe.withDefault [] (List.tail deck.cards)))
-
-viewCardListItem : Cards.Card -> Html.Html Msg
-viewCardListItem card =
-    Html.li [] [Html.App.map CardMsg (Cards.view card)]
-
-view : Deck -> Html.Html Msg
-view deck =
-    Html.div [] [
-        Html.button [ Html.Events.onClick BeginShuffle ] [ Html.text "Shuffle" ],
-        Html.ol [] (List.map viewCardListItem deck.cards)
-    ]
 
 -- To build a good kings deck we need the last king to be somewhere near the end
 -- of the deck. These functions shift the king of spades into the last cards.

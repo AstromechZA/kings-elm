@@ -31,23 +31,20 @@ type Msg
 
 view : Model -> Html.Html Msg
 view model =
-    Html.div [ Html.Attributes.attribute "class" "playingCards" ] [
-        Html.button [ Html.Events.onClick ResetAll ] [ Html.text "Reset" ],
-        Html.button [ Html.Events.onClick DrawACard ] [ Html.text "Draw A Card" ],
-        case model.selectedCard of
-            Just card ->
-                Html.App.map CardMsg (Cards.view card)
-            Nothing ->
-                Html.text "no card drawn"
-        ,
-        Html.p [] [
-            Html.text ((toString (List.length model.deck.cards)) ++ " cards remaining")
+    Html.div [ Html.Attributes.class "container playingCards" ] [
+        Html.div [ Html.Attributes.class "row text-center main-row" ] [
+            Html.a [ Html.Events.onClick DrawACard ] [
+                Html.App.map CardMsg (Cards.view model.selectedCard)
+            ],
+            Html.p [] [
+                Html.text ((toString (List.length model.deck.cards)) ++ " cards remaining")
+            ],
+            Html.p [] [
+                Html.text ((toString model.kingsSeen) ++ " kings seen")
+            ]
         ],
-        Html.p [] [
-            Html.text ((toString model.kingsSeen) ++ " kings seen")
-        ],
-        Html.App.map DeckMsg (Decks.view model.deck),
-        Html.App.map RuleMsg (Rules.view model.rules)
+        Html.App.map RuleMsg (Rules.view model.rules),
+        Html.button [ Html.Events.onClick ResetAll ] [ Html.text "Reset" ]
     ]
 
 -- Update
@@ -71,7 +68,7 @@ update msg model =
             in
                 case c of
                     Just card ->
-                        if card.face.symbol == "k" then
+                        if card.face == Cards.king then
                             ({model | deck = newdeck, selectedCard = c, kingsSeen = model.kingsSeen + 1}, Cmd.none)
                         else
                             ({model | deck = newdeck, selectedCard = c}, Cmd.none)

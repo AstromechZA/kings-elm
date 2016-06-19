@@ -65,9 +65,13 @@ isKingOfSpades card =
 
 type Msg = NoOp
 
-view : Card -> Html.Html Msg
+view : Maybe Card -> Html.Html Msg
 view card =
-    Html.div [ Html.Attributes.attribute "class" (String.join " " ["card", card.suit.cssname, card.face.cssname]) ] [
-        Html.span [ Html.Attributes.attribute "class" "rank" ] [ Html.text card.face.symbol ],
-        Html.span [ Html.Attributes.attribute "class" "suit" ] [ Html.text card.suit.symbol ]
-    ]
+    case card of
+        Just card ->
+            Html.div [ Html.Attributes.class (String.join " " ["card card-button", card.suit.cssname, card.face.cssname]) ] [
+                Html.span [ Html.Attributes.class "rank" ] [ Html.text card.face.symbol ],
+                Html.span [ Html.Attributes.class "suit" ] [ Html.text card.suit.symbol ]
+            ]
+        Nothing ->
+            Html.div [ Html.Attributes.class "card back card-button" ] [ Html.text "*" ]

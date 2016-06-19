@@ -119,7 +119,16 @@ type Msg = NoOp
 
 view : RuleSet -> Html.Html Msg
 view ruleset =
-    Html.table [] (List.map viewRuleRow ruleset.rules)
+    Html.table [] [
+        Html.thead [] [
+            Html.tr [] [
+                Html.td [] [ Html.text "Card"],
+                Html.td [] [ Html.text "Rule"],
+                Html.td [] [ Html.text "Description"]
+            ]
+        ],
+        Html.tbody [] (List.map viewRuleRow ruleset.rules)
+    ]
 
 viewRuleRow : Rule -> Html.Html Msg
 viewRuleRow rule =
