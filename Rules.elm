@@ -1,6 +1,7 @@
 module Rules exposing (Rule, RuleSet, buildBasic, view, Msg)
 
 import Html
+import Html.Attributes
 import Cards
 
 type alias Rule = {
@@ -46,7 +47,7 @@ buildBasic =
                 "Any Four"
                 (\c -> c.face == Cards.four))),
         (Rule
-            "Love-Bird"
+            "Love Bird"
             "Pick someone who will drink with you for the rest of the round."
             (RuleFilter
                 "Red Five"
@@ -119,7 +120,7 @@ type Msg = NoOp
 
 view : RuleSet -> Html.Html Msg
 view ruleset =
-    Html.table [] [
+    Html.table [ Html.Attributes.class "table table-striped table-bordered table-condensed"] [
         Html.thead [] [
             Html.tr [] [
                 Html.td [] [ Html.text "Card"],

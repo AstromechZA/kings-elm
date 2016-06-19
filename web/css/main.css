@@ -1,5 +1,7 @@
-.card-button {
+.card.card-button {
     cursor: pointer;
+    margin-left: .5em;
+    margin-top: .5em;
 }
 
 .text-center {

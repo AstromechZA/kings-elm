@@ -71,7 +71,7 @@ view card =
         Just card ->
             Html.div [ Html.Attributes.class (String.join " " ["card card-button", card.suit.cssname, card.face.cssname]) ] [
                 Html.span [ Html.Attributes.class "rank" ] [ Html.text card.face.symbol ],
-                Html.span [ Html.Attributes.class "suit" ] [ Html.text card.suit.symbol ]
+                Html.span [ Html.Attributes.class "suit" ] [ Html.text "\x00A0" ]
             ]
         Nothing ->
             Html.div [ Html.Attributes.class "card back card-button" ] [ Html.text "*" ]
